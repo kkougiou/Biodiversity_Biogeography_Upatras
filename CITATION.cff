@@ -2,15 +2,15 @@ cff-version: 1.2.0
 message: "If you use this seminar material, please cite it as below."
 title: "Spatial Data Retrieval and Biodiversity Patterns"
 authors:
-  - family-names: "Lastname"
-    given-names: "Firstname"
-    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "Kougioumoutzis"
+    given-names: "Konstantinos"
+    orcid: "https://orcid.org/0000-0002-6938-3025"
     affiliation: "Department of Biology, University of Patras"
 version: "1.0.0"
-date-released: "2026-XX-XX"
+date-released: "2026-05-24"
 license: MIT
-repository-code: "https://github.com/yourusername/seminar-patras"
-doi: "10.5281/zenodo.XXXXXXX"
+repository-code: "https://github.com/kkougiou/Biodiversity_Biogeography_Upatras"
+doi: "10.5281/zenodo.20363115"
 type: dataset
 keywords:
   - spatial ecology
