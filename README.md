@@ -41,6 +41,7 @@ The full **`{targets}` pipeline** rebuilds every figure and table in the seminar
 # 1. Clone
 git clone [https://github.com/kkougiou/Biodiversity_Biogeography_Upatras.git](https://github.com/kkougiou/Biodiversity_Biogeography_Upatras.git)
 cd Biodiversity_Biogeography_Upatras
+```
 
 ```r
 # 2. Open the project in RStudio (double-click .Rproj) OR launch R here
