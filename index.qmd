@@ -1,141 +1,151 @@
 ---
 title: "Spatial Data Retrieval & Biodiversity Patterns"
-subtitle: "A Two-Day Methodological Seminar"
+subtitle: "A Two-Day Methodological Seminar in R"
 author:
-  - name: "Your Full Name, PhD"
+  - name: "Konstantinos Kougioumoutzis, PhD, MSc"
     affiliation: "Department of Biology, University of Patras"
-    email: "your.email@upatras.gr"
-    orcid: "0000-0000-0000-0000"
+    email: "kkougiou@aua.gr"
+    orcid: "0000-0002-6938-3025"
 date: today
 date-format: "MMMM D, YYYY"
-institute: "University of Patras · Department of Biology"
-format:
-  revealjs:
-    theme: [default, custom.scss]
+format: revealjs
 ---
 
-## Welcome {background-color="#003366"}
+## Welcome {.white-text background-color="#003366"}
 
-Καλώς ήρθατε στο διήμερο σεμινάριο για **Spatial Data & Biodiversity**
+Καλώς ήρθατε στο διήμερο σεμινάριο για **Spatial Data & Biodiversity in R**
 
 ::: fragment
 *Department of Biology · University of Patras · 2026*
 :::
 
+## Why R for Spatial Ecology?
+
+:::::: columns
+::: {.column width="50%"}
+-   **Reproducible** scripted workflows
+-   Mature spatial stack (`sf`, `terra`, `stars`)
+-   Direct access to **GBIF**, climate, elevation APIs
+-   Powerful biodiversity packages (`vegan`, `iNEXT`, `betapart`)
+-   Integrated reporting via **Quarto**
+:::
+
+:::: {.column width="50%"}
+```{r}
+#| eval: false
+library(sf)
+library(terra)
+library(rgbif)
+library(vegan)
+library(tidyverse)
+```
+
+::: callout-tip
+One language, end-to-end pipeline.
+:::
+::::
+::::::
+
 ## Seminar Overview
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="50%"}
 ### Day 1 — Spatial Data
 
-- GIS fundamentals & coordinate systems
-- Open biodiversity data sources (GBIF, iNaturalist)
-- Programmatic data retrieval (R, Python)
-- Cleaning & quality control
-- Hands-on lab session
+-   GIS fundamentals & CRS
+-   Open biodiversity data sources
+-   Programmatic retrieval with `rgbif`
+-   Cleaning with `CoordinateCleaner`
+-   Hands-on lab session
 :::
 
 ::: {.column width="50%"}
 ### Day 2 — Biodiversity Patterns
 
-- Alpha, beta, gamma diversity
-- Species distribution modeling (SDM)
-- Biogeographical regionalization
-- Macroecological patterns
-- Case study: Mediterranean flora
+-   α, β, γ diversity (`vegan`, `betapart`)
+-   Rarefaction & Hill numbers (`iNEXT`)
+-   Species Distribution Modeling (`predicts`, `biomod2`)
+-   Biogeographical regionalization
+-   Mediterranean case study
 :::
-
-::::
+:::::
 
 ## Learning Objectives
 
-By the end of this seminar, participants will be able to:
+By the end of this seminar, you will be able to:
 
-1. **Retrieve** occurrence and environmental data from open repositories
-2. **Process** spatial datasets using reproducible workflows
-3. **Quantify** biodiversity using appropriate metrics
-4. **Model** species distributions across geographic gradients
-5. **Interpret** biogeographical patterns in an ecological context
+1.  **Retrieve** occurrence and environmental data programmatically in R
+2.  **Process** spatial datasets reproducibly with `sf` and `terra`
+3.  **Quantify** biodiversity using appropriate metrics
+4.  **Model** species distributions across environmental gradients
+5.  **Interpret** biogeographical patterns ecologically
 
 ::: callout-tip
-All code, datasets, and slides will be available in the GitHub repository.
+All code, datasets, and slides are versioned on GitHub.
 :::
 
-## Prerequisites & Setup
+## Setup & Prerequisites
 
-:::: {.columns}
+```{r}
+#| eval: false
 
-::: {.column width="60%"}
-**Software stack**
+# 1. Clone the repository
+# git clone https://github.com/yourusername/seminar-patras
 
-- R (≥ 4.3) + RStudio
-- Python (≥ 3.10)
-- QGIS (≥ 3.34)
-- Git
+# 2. Open the project in RStudio
 
-**Key R packages**
+# 3. Run the setup script
+source("setup.R")
 
-```r
-install.packages(c(
-  "sf", "terra", "rgbif",
-  "CoordinateCleaner", "dismo",
-  "vegan", "biomod2", "tidyverse"
-))
+# 4. Render the slides
+quarto::quarto_render("day1-spatial-data.qmd")
 ```
-:::
 
-::: {.column width="40%"}
 ::: callout-note
-**Sessions**
+## Software requirements
 
-- Day 1: 09:00 – 17:00
-- Day 2: 09:00 – 17:00
-- Coffee breaks at 11:00 & 15:30
+R ≥ 4.3 · RStudio · Quarto ≥ 1.4 · Git · \~2 GB free disk space for spatial layers
 :::
-:::
-
-::::
 
 ## Agenda — Day 1 {background-color="#F8F9FA"}
 
-| Time         | Module                            | Format         |
-|--------------|-----------------------------------|----------------|
-| 09:00–10:30  | Introduction to spatial data      | Lecture        |
-| 11:00–12:30  | Coordinate systems & projections  | Lecture + Demo |
-| 13:30–15:00  | API-based data retrieval (GBIF)   | Hands-on       |
-| 15:30–17:00  | Data cleaning & QC                | Hands-on       |
+| Time        | Module                            | Format         |
+|-------------|-----------------------------------|----------------|
+| 09:00–10:30 | Spatial data fundamentals         | Lecture        |
+| 11:00–12:30 | CRS, projections & `sf`/`terra`   | Lecture + Demo |
+| 13:30–15:00 | GBIF data retrieval with `rgbif`  | Hands-on       |
+| 15:30–17:00 | Cleaning with `CoordinateCleaner` | Hands-on       |
 
 ## Agenda — Day 2 {background-color="#F8F9FA"}
 
-| Time         | Module                          | Format         |
-|--------------|---------------------------------|----------------|
-| 09:00–10:30  | Biodiversity metrics            | Lecture        |
-| 11:00–12:30  | Species distribution modeling   | Lecture + Demo |
-| 13:30–15:00  | Biogeographical analysis        | Hands-on       |
-| 15:30–17:00  | Case study & discussion         | Workshop       |
+| Time        | Module                          | Format         |
+|-------------|---------------------------------|----------------|
+| 09:00–10:30 | Biodiversity metrics in `vegan` | Lecture        |
+| 11:00–12:30 | SDM with `predicts` & `biomod2` | Lecture + Demo |
+| 13:30–15:00 | β-diversity & biogeography      | Hands-on       |
+| 15:30–17:00 | Mediterranean case study        | Workshop       |
 
 ## Contact & Resources
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="50%"}
-**Instructor**
+### Instructor
 
-Your Full Name, PhD  
-📧 your.email@upatras.gr  
-🌐 yourwebsite.com  
-🐙 github.com/yourusername
+**Your Full Name, PhD**
+
+-   📧 kkougiou\@aua.gr
+-   🌐 kkougiou.github.io
+-   🐙 github.com/kkougiou
 :::
 
 ::: {.column width="50%"}
-**Repository**
+### Repository
 
-All materials:  
-github.com/yourusername/seminar-patras
+github.com/kkougiou/seminar-patras
 
-**License**  
-CC-BY 4.0
+**License**
+
+-   Code: MIT
+-   Slides: CC-BY 4.0
 :::
-
-::::
+:::::

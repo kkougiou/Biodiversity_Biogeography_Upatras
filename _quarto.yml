@@ -8,7 +8,7 @@ website:
   navbar:
     background: primary
     left:
-      - href: index_v2.qmd
+      - href: index.qmd
         text: Home
       - href: day1-spatial-data.qmd
         text: "Day 1: Spatial Data"
@@ -16,7 +16,7 @@ website:
         text: "Day 2: Biodiversity"
     right:
       - icon: github
-        href: https://github.com/kkougiou/seminar
+        href: https://github.com/kkougiou/Biodiversity_Biogeography_Upatras
       - icon: envelope
         href: mailto:kkougiou@aua.gr
 
