@@ -1,0 +1,66 @@
+project:
+  type: website
+  output-dir: _output
+
+website:
+  title: "Spatial Data & Biodiversity Patterns"
+  description: "Two-Day Seminar | Department of Biology, University of Patras"
+  navbar:
+    background: primary
+    left:
+      - href: index_v2.qmd
+        text: Home
+      - href: day1-spatial-data.qmd
+        text: "Day 1: Spatial Data"
+      - href: day2-biodiversity.qmd
+        text: "Day 2: Biodiversity"
+    right:
+      - icon: github
+        href: https://github.com/kkougiou/seminar
+      - icon: envelope
+        href: mailto:kkougiou@aua.gr
+
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: c/t
+    show-slide-number: all
+    chalkboard: true
+    incremental: false
+    transition: slide
+    background-transition: fade
+    highlight-style: github
+    code-line-numbers: true
+    code-overflow: wrap
+    code-copy: true
+    code-link: true
+    smaller: false
+    scrollable: true
+    preview-links: auto
+    logo: images/upatras-logo.png
+    footer: "Spatial Data & Biodiversity | University of Patras 2026"
+    title-slide-attributes:
+      data-background-color: "#003366"
+      data-background-opacity: "0.95"
+    callout-appearance: simple
+    callout-icon: true
+    fig-cap-location: bottom
+    tbl-cap-location: top
+    fig-align: center
+    bibliography: references.bib
+    csl: https://www.zotero.org/styles/nature
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  cache: true
+  freeze: auto
+
+knitr:
+  opts_chunk:
+    fig.width: 8
+    fig.height: 5
+    fig.retina: 2
+    dev: "png"
+    dpi: 150

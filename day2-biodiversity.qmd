@@ -1,0 +1,393 @@
+---
+title: "Day 2 — Biodiversity & Biogeographical Patterns"
+subtitle: "Quantifying diversity and modelling distributions in R"
+author: "Your Name"
+format: revealjs
+bibliography: references.bib
+---
+
+## Setup
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+library(sf)
+library(terra)
+library(vegan)
+library(betapart)
+library(iNEXT)
+library(predicts)
+library(blockCV)
+library(usdm)
+library(tidyverse)
+library(patchwork)
+library(viridis)
+
+theme_set(theme_minimal(base_size = 13))
+```
+
+## Quantifying Biodiversity {background-color="#003366" .white-text}
+
+## The α, β, γ Framework
+
+Following @whittaker1972evolution:
+
+$$
+\gamma = \alpha \times \beta
+$$
+
+| Component   | Scale                | R function              |
+|-------------|----------------------|-------------------------|
+| α (alpha)   | Local richness       | `vegan::specnumber()`   |
+| β (beta)    | Turnover among sites | `betapart::beta.pair()` |
+| γ (gamma)   | Regional richness    | `vegan::specpool()`     |
+
+## Hill Numbers — A Unified Framework
+
+$$
+{}^{q}\!D = \left( \sum_{i=1}^{S} p_i^{\,q} \right)^{1/(1-q)}
+$$
+
+- \(q = 0\): species richness
+- \(q = 1\): exponential of Shannon entropy
+- \(q = 2\): inverse Simpson concentration
+
+```{r}
+#| eval: false
+
+library(iNEXT)
+out <- iNEXT(community_data, q = c(0, 1, 2),
+             datatype = "abundance", endpoint = 500)
+ggiNEXT(out, type = 1) + scale_color_viridis_d(option = "D")
+```
+
+## α-Diversity Example
+
+```{r}
+#| eval: false
+
+library(vegan)
+data(BCI)   # tropical tree community
+
+div <- tibble(
+  site     = rownames(BCI),
+  S        = specnumber(BCI),
+  H        = diversity(BCI, index = "shannon"),
+  Simpson  = diversity(BCI, index = "simpson"),
+  Pielou_J = H / log(S)
+)
+
+div |>
+  pivot_longer(-site) |>
+  ggplot(aes(value)) +
+  geom_histogram(fill = "#4A7C59", bins = 20) +
+  facet_wrap(~ name, scales = "free")
+```
+
+## β-Diversity: Turnover vs Nestedness
+
+@baselga2010partitioning decomposed Sørensen β into two components:
+
+$$
+\beta_{\text{SOR}} = \beta_{\text{SIM}} + \beta_{\text{SNE}}
+$$
+
+```{r}
+#| eval: false
+
+library(betapart)
+
+# Convert abundance to presence/absence
+pa <- ifelse(BCI > 0, 1, 0)
+
+# Pairwise multi-component beta
+bp <- beta.pair(pa, index.family = "sorensen")
+
+# Mean values
+sapply(bp, mean)
+#>  beta.sim  beta.sne  beta.sor
+#>      0.41      0.06      0.47
+```
+
+## Visualising β-Diversity
+
+```{r}
+#| eval: false
+
+library(ape)
+
+# UPGMA on turnover
+hc <- hclust(bp$beta.sim, method = "average")
+
+# NMDS ordination
+nmds <- metaMDS(bp$beta.sor, k = 2, trymax = 50)
+
+plot(nmds, type = "t", main = "NMDS — Sørensen dissimilarity")
+```
+
+## Species Distribution Modelling {background-color="#003366" .white-text}
+
+## SDM Workflow
+
+```{mermaid}
+flowchart LR
+  A[Cleaned<br/>occurrences] --> C[Predictor<br/>selection]
+  B[Environmental<br/>layers] --> C
+  C --> D[Pseudo-absences<br/>or background]
+  D --> E[Model fitting]
+  E --> F[Spatial<br/>cross-validation]
+  F --> G[Prediction &<br/>uncertainty]
+
+  style G fill:#4A7C59,color:white
+```
+
+## Predictor Selection — Multicollinearity
+
+```{r}
+#| eval: false
+
+library(usdm)
+
+# Variance Inflation Factor stepwise selection
+v <- vifstep(bio_gr, th = 5)
+v
+#> 4 variables from 19 input variables have collinearity problem:
+#>   bio6 bio11 bio16 bio17
+
+# Keep only retained predictors
+preds <- bio_gr[[v@results$Variables]]
+```
+
+::: {.callout-tip}
+A VIF threshold of **5–10** is common; lower is stricter.
+:::
+
+## Background / Pseudo-absences
+
+```{r}
+#| eval: false
+
+library(predicts)
+
+# 10,000 random background points within Greece
+set.seed(42)
+bg <- spatSample(preds, size = 10000,
+                 method = "random", na.rm = TRUE,
+                 as.points = TRUE, values = FALSE)
+
+# Extract environmental values at presence + background
+pres_env <- extract(preds, vect(pts_thin))
+bg_env   <- extract(preds, bg)
+
+train <- bind_rows(
+  mutate(pres_env, occ = 1),
+  mutate(as_tibble(bg_env), occ = 0)
+) |> drop_na()
+```
+
+## Fitting a MaxEnt-style Model
+
+```{r}
+#| eval: false
+
+library(predicts)
+
+# MaxEnt via the `predicts` package (successor of `dismo`)
+mod <- MaxEnt(
+  x = preds,
+  p = st_coordinates(pts_thin),
+  removeDuplicates = TRUE
+)
+
+# Predict habitat suitability
+suit <- predict(preds, mod, type = "cloglog")
+plot(suit, col = viridis(100), main = "Habitat suitability")
+```
+
+## Spatial Block Cross-Validation
+
+```{r}
+#| eval: false
+
+library(blockCV)
+
+sb <- cv_spatial(
+  x         = pts_thin,
+  column    = "occ",
+  k         = 5,
+  size      = 50000,   # 50 km blocks
+  selection = "random",
+  iteration = 100
+)
+
+cv_plot(cv = sb, x = pts_thin)
+```
+
+::: {.callout-important}
+Random CV inflates SDM performance by exploiting spatial autocorrelation.
+**Always use spatial blocking** for honest evaluation.
+:::
+
+## Model Evaluation
+
+```{r}
+#| eval: false
+
+library(predicts)
+
+eval_metrics <- pa_evaluate(
+  p = predict(mod, pres_env_test),
+  a = predict(mod, bg_env_test)
+)
+
+eval_metrics
+#>   AUC    : 0.87
+#>   COR    : 0.42
+#>   max TSS: 0.61
+```
+
+## Biogeographical Regionalisation {background-color="#003366" .white-text}
+
+## From β-Diversity to Bioregions
+
+The workflow:
+
+1. Build a site × species matrix on a regular grid
+2. Compute pairwise β-diversity (`betapart`)
+3. Apply hierarchical clustering (`hclust`)
+4. Cut the dendrogram → bioregions
+5. Map back to space
+
+::: aside
+See @kreft2010framework and @daru2020endemism for ecoregion delineation methods.
+:::
+
+## Gridded β-Diversity in R
+
+```{r}
+#| eval: false
+
+# Build a 0.5° grid
+grid <- st_make_grid(greece, cellsize = 0.5, square = TRUE) |>
+        st_as_sf() |>
+        mutate(cell_id = row_number())
+
+# Join occurrences to grid
+sp_grid <- st_join(all_species_pts, grid)
+
+# Site × species matrix
+mat <- sp_grid |>
+  st_drop_geometry() |>
+  count(cell_id, species) |>
+  pivot_wider(names_from = species, values_from = n,
+              values_fill = 0) |>
+  column_to_rownames("cell_id")
+
+# Presence/absence + Simpson dissimilarity
+pa  <- ifelse(mat > 0, 1, 0)
+dis <- beta.pair(pa)$beta.sim
+hc  <- hclust(dis, method = "average")
+clusters <- cutree(hc, k = 5)
+```
+
+## Mapping Bioregions
+
+```{r}
+#| eval: false
+
+grid_clust <- grid |>
+  filter(cell_id %in% rownames(mat)) |>
+  mutate(region = factor(clusters))
+
+ggplot() +
+  geom_sf(data = greece, fill = "grey95") +
+  geom_sf(data = grid_clust, aes(fill = region),
+          color = NA, alpha = 0.85) +
+  scale_fill_viridis_d(option = "D", name = "Bioregion") +
+  labs(title    = "Biogeographical regionalisation of Greece",
+       subtitle = "Based on Simpson β-diversity (turnover)",
+       caption  = "Data: GBIF · CRS: EPSG:4326") +
+  theme_void()
+```
+
+## Case Study: Mediterranean Flora {background-color="#003366" .white-text}
+
+## Putting It All Together
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### Question
+
+How is plant β-diversity structured across the Mediterranean basin?
+
+### Data
+
+- 25 woody species (GBIF)
+- WorldClim BIO1, BIO12, BIO15
+- SoilGrids texture
+:::
+
+::: {.column width="50%"}
+### Methods
+
+- `rgbif` → retrieval
+- `CoordinateCleaner` → QC
+- `betapart` → turnover
+- `predicts` → SDM
+- `blockCV` → validation
+:::
+
+::::
+
+## Hands-on Exercise 2 {background-color="#003366" .white-text}
+
+### 🛠️ Your turn (90 min)
+
+1. Choose 3 species from yesterday's exercise
+2. Stack their cleaned occurrences
+3. Build a site × species matrix on a 0.25° grid
+4. Compute pairwise β with `betapart::beta.pair()`
+5. Cluster and map 2–4 bioregions
+6. Discuss: do they align with known phytogeographical zones?
+
+⏱️ Reconvene at **15:00** for synthesis
+
+## Synthesis & Take-aways
+
+- R offers a complete, reproducible pipeline for spatial ecology
+- Choose biodiversity metrics that **match your question**, not vice-versa
+- SDMs are powerful but require **honest evaluation** (spatial CV)
+- Biogeographical patterns emerge from β-diversity **structure**
+- Document, version, share → **open science is good science**
+
+## Further Reading
+
+- @lovelace2019geocomputation — Geocomputation with R
+- @pebesma2023spatial — Spatial Data Science with R
+- @baselga2010partitioning — β-diversity partitioning
+- @valavi2021modelling — modern SDM best practices
+- @whittaker1972evolution — α/β/γ framework
+
+::: {.callout-tip}
+## Repository
+Slides, code, and data: [github.com/kkougiou/seminar-patras](https://github.com/kkougiou/seminar-patras)
+:::
+
+## Thank You! {background-color="#003366" .white-text}
+
+### Ευχαριστώ πολύ!
+
+- 📧 kkougiou@aua.gr
+- 🐙 github.com/kkougiou
+- 🆔 ORCID: 0000-0002-6938-3025
+- 🌐 kkougiou.github.io
+
+*Questions, collaborations, follow-ups — always welcome.*
+
+## References
+
+::: {#refs}
+:::

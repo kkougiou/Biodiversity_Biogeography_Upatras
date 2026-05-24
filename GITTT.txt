@@ -1,0 +1,12 @@
+# 1. Clone repo
+git clone https://github.com/yourusername/seminar-patras
+cd seminar-patras
+
+# 2. Bootstrap the R environment
+Rscript setup.R
+
+# 3. Live preview while editing
+quarto preview day1-spatial-data.qmd
+
+# 4. Final render
+quarto render

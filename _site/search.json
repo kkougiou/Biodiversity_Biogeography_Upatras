@@ -1,0 +1,156 @@
+[
+  {
+    "objectID": "index.html#welcome",
+    "href": "index.html#welcome",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Welcome",
+    "text": "Welcome\nΚαλώς ήρθατε στο διήμερο σεμινάριο για Spatial Data & Biodiversity\n\nDepartment of Biology · University of Patras · 2026"
+  },
+  {
+    "objectID": "index.html#seminar-overview",
+    "href": "index.html#seminar-overview",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Seminar Overview",
+    "text": "Seminar Overview\n\n\nDay 1 — Spatial Data\n\nGIS fundamentals & coordinate systems\nOpen biodiversity data sources (GBIF, iNaturalist)\nProgrammatic data retrieval (R, Python)\nCleaning & quality control\nHands-on lab session\n\n\nDay 2 — Biodiversity Patterns\n\nAlpha, beta, gamma diversity\nSpecies distribution modeling (SDM)\nBiogeographical regionalization\nMacroecological patterns\nCase study: Mediterranean flora"
+  },
+  {
+    "objectID": "index.html#learning-objectives",
+    "href": "index.html#learning-objectives",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Learning Objectives",
+    "text": "Learning Objectives\nBy the end of this seminar, participants will be able to:\n\nRetrieve occurrence and environmental data from open repositories\nProcess spatial datasets using reproducible workflows\nQuantify biodiversity using appropriate metrics\nModel species distributions across geographic gradients\nInterpret biogeographical patterns in an ecological context\n\n\n\n\n\n\n\nTip\n\n\nAll code, datasets, and slides will be available in the GitHub repository."
+  },
+  {
+    "objectID": "index.html#prerequisites-setup",
+    "href": "index.html#prerequisites-setup",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Prerequisites & Setup",
+    "text": "Prerequisites & Setup\n\n\nSoftware stack\n\nR (≥ 4.3) + RStudio\nPython (≥ 3.10)\nQGIS (≥ 3.34)\nGit\n\nKey R packages\ninstall.packages(c(\n  \"sf\", \"terra\", \"rgbif\",\n  \"CoordinateCleaner\", \"dismo\",\n  \"vegan\", \"biomod2\", \"tidyverse\"\n))\n\n\n\n\n\n\n\nNote\n\n\nSessions\n\nDay 1: 09:00 – 17:00\nDay 2: 09:00 – 17:00\nCoffee breaks at 11:00 & 15:30"
+  },
+  {
+    "objectID": "index.html#agenda-day-1",
+    "href": "index.html#agenda-day-1",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Agenda — Day 1",
+    "text": "Agenda — Day 1\n\n\n\nTime\nModule\nFormat\n\n\n\n\n09:00–10:30\nIntroduction to spatial data\nLecture\n\n\n11:00–12:30\nCoordinate systems & projections\nLecture + Demo\n\n\n13:30–15:00\nAPI-based data retrieval (GBIF)\nHands-on\n\n\n15:30–17:00\nData cleaning & QC\nHands-on"
+  },
+  {
+    "objectID": "index.html#agenda-day-2",
+    "href": "index.html#agenda-day-2",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Agenda — Day 2",
+    "text": "Agenda — Day 2\n\n\n\nTime\nModule\nFormat\n\n\n\n\n09:00–10:30\nBiodiversity metrics\nLecture\n\n\n11:00–12:30\nSpecies distribution modeling\nLecture + Demo\n\n\n13:30–15:00\nBiogeographical analysis\nHands-on\n\n\n15:30–17:00\nCase study & discussion\nWorkshop"
+  },
+  {
+    "objectID": "index.html#contact-resources",
+    "href": "index.html#contact-resources",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Contact & Resources",
+    "text": "Contact & Resources\n\n\nInstructor\nYour Full Name, PhD\n📧 your.email@upatras.gr\n🌐 yourwebsite.com\n🐙 github.com/yourusername\n\nRepository\nAll materials:\ngithub.com/yourusername/seminar-patras\nLicense\nCC-BY 4.0"
+  },
+  {
+    "objectID": "day1-spatial-data.html#spatial-data-a-primer",
+    "href": "day1-spatial-data.html#spatial-data-a-primer",
+    "title": "Day 1 — Spatial Data Retrieval & Analysis",
+    "section": "Spatial Data: A Primer",
+    "text": "Spatial Data: A Primer"
+  },
+  {
+    "objectID": "day1-spatial-data.html#what-is-spatial-data",
+    "href": "day1-spatial-data.html#what-is-spatial-data",
+    "title": "Day 1 — Spatial Data Retrieval & Analysis",
+    "section": "What is Spatial Data?",
+    "text": "What is Spatial Data?\n\nData that explicitly represents location on Earth’s surface, typically through coordinates within a defined reference system.\n\nTwo fundamental types\n\n\nVector\n\nPoints (e.g., occurrences)\nLines (e.g., rivers)\nPolygons (e.g., protected areas)\n\n\nRaster\n\nContinuous gridded surfaces\ne.g., elevation, temperature\nEach cell = one value\n\n\n\n\nSee Lovelace et al. (2019) for a comprehensive introduction."
+  },
+  {
+    "objectID": "day1-spatial-data.html#coordinate-reference-systems",
+    "href": "day1-spatial-data.html#coordinate-reference-systems",
+    "title": "Day 1 — Spatial Data Retrieval & Analysis",
+    "section": "Coordinate Reference Systems",
+    "text": "Coordinate Reference Systems\nThe mathematical framework that links coordinates to locations on Earth.\n\\[\n\\text{CRS} = \\{\\text{datum},\\ \\text{projection},\\ \\text{units}\\}\n\\]\n\n\n\n\n\n\nAlways check the CRS\n\n\nMismatched CRS is the #1 source of errors in spatial analysis. Use EPSG codes (e.g., EPSG:4326 for WGS84) to be unambiguous."
+  },
+  {
+    "objectID": "day1-spatial-data.html#retrieving-gbif-data-with-r",
+    "href": "day1-spatial-data.html#retrieving-gbif-data-with-r",
+    "title": "Day 1 — Spatial Data Retrieval & Analysis",
+    "section": "Retrieving GBIF Data with R",
+    "text": "Retrieving GBIF Data with R"
+  },
+  {
+    "objectID": "day1-spatial-data.html#data-cleaning-workflow",
+    "href": "day1-spatial-data.html#data-cleaning-workflow",
+    "title": "Day 1 — Spatial Data Retrieval & Analysis",
+    "section": "Data Cleaning Workflow",
+    "text": "Data Cleaning Workflow\n\n\n\n\n\nflowchart LR\n  A[Raw GBIF&lt;br/&gt;records] --&gt; B[Remove&lt;br/&gt;duplicates]\n  B --&gt; C[Flag&lt;br/&gt;centroids]\n  C --&gt; D[Spatial&lt;br/&gt;thinning]\n  D --&gt; E[Validate&lt;br/&gt;taxonomy]\n  E --&gt; F[(Analysis-ready&lt;br/&gt;dataset)]\n\n  style F fill:#4A7C59,color:white\n  style A fill:#B22234,color:white"
+  },
+  {
+    "objectID": "day1-spatial-data.html#hands-on-exercise-1",
+    "href": "day1-spatial-data.html#hands-on-exercise-1",
+    "title": "Day 1 — Spatial Data Retrieval & Analysis",
+    "section": "Hands-on Exercise 1",
+    "text": "Hands-on Exercise 1\n🛠️ Your turn\n\nDownload occurrences for your favorite Mediterranean species\nApply CoordinateCleaner::clean_coordinates()\nMap the cleaned vs. raw distribution\nDiscuss flagged records with your neighbor\n\n⏱️ 45 minutes · We reconvene at 14:15"
+  },
+  {
+    "objectID": "day1-spatial-data.html#references",
+    "href": "day1-spatial-data.html#references",
+    "title": "Day 1 — Spatial Data Retrieval & Analysis",
+    "section": "References",
+    "text": "References\n\n\nLovelace, Robin, Jakub Nowosad, and Jannes Muenchow. 2019. Geocomputation with r. CRC Press."
+  },
+  {
+    "objectID": "index_v2.html#welcome",
+    "href": "index_v2.html#welcome",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Welcome",
+    "text": "Welcome\nΚαλώς ήρθατε στο διήμερο σεμινάριο για Spatial Data & Biodiversity in R\n\nDepartment of Biology · University of Patras · 2026"
+  },
+  {
+    "objectID": "index_v2.html#why-r-for-spatial-ecology",
+    "href": "index_v2.html#why-r-for-spatial-ecology",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Why R for Spatial Ecology?",
+    "text": "Why R for Spatial Ecology?\n\n\n\nReproducible scripted workflows\nMature spatial stack (sf, terra, stars)\nDirect access to GBIF, climate, elevation APIs\nPowerful biodiversity packages (vegan, iNEXT, betapart)\nIntegrated reporting via Quarto\n\n\n\n\n\n\n\n\nTip\n\n\nOne language, end-to-end pipeline."
+  },
+  {
+    "objectID": "index_v2.html#seminar-overview",
+    "href": "index_v2.html#seminar-overview",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Seminar Overview",
+    "text": "Seminar Overview\n\n\nDay 1 — Spatial Data\n\nGIS fundamentals & CRS\nOpen biodiversity data sources\nProgrammatic retrieval with rgbif\nCleaning with CoordinateCleaner\nHands-on lab session\n\n\nDay 2 — Biodiversity Patterns\n\nα, β, γ diversity (vegan, betapart)\nRarefaction & Hill numbers (iNEXT)\nSpecies Distribution Modeling (predicts, biomod2)\nBiogeographical regionalization\nMediterranean case study"
+  },
+  {
+    "objectID": "index_v2.html#learning-objectives",
+    "href": "index_v2.html#learning-objectives",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Learning Objectives",
+    "text": "Learning Objectives\nBy the end of this seminar, you will be able to:\n\nRetrieve occurrence and environmental data programmatically in R\nProcess spatial datasets reproducibly with sf and terra\nQuantify biodiversity using appropriate metrics\nModel species distributions across environmental gradients\nInterpret biogeographical patterns ecologically\n\n\n\n\n\n\n\nTip\n\n\nAll code, datasets, and slides are versioned on GitHub."
+  },
+  {
+    "objectID": "index_v2.html#setup-prerequisites",
+    "href": "index_v2.html#setup-prerequisites",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Setup & Prerequisites",
+    "text": "Setup & Prerequisites\n\n\n\n\n\n\nSoftware requirements\n\n\nR ≥ 4.3 · RStudio · Quarto ≥ 1.4 · Git · ~2 GB free disk space for spatial layers"
+  },
+  {
+    "objectID": "index_v2.html#agenda-day-1",
+    "href": "index_v2.html#agenda-day-1",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Agenda — Day 1",
+    "text": "Agenda — Day 1\n\n\n\nTime\nModule\nFormat\n\n\n\n\n09:00–10:30\nSpatial data fundamentals\nLecture\n\n\n11:00–12:30\nCRS, projections & sf/terra\nLecture + Demo\n\n\n13:30–15:00\nGBIF data retrieval with rgbif\nHands-on\n\n\n15:30–17:00\nCleaning with CoordinateCleaner\nHands-on"
+  },
+  {
+    "objectID": "index_v2.html#agenda-day-2",
+    "href": "index_v2.html#agenda-day-2",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Agenda — Day 2",
+    "text": "Agenda — Day 2\n\n\n\nTime\nModule\nFormat\n\n\n\n\n09:00–10:30\nBiodiversity metrics in vegan\nLecture\n\n\n11:00–12:30\nSDM with predicts & biomod2\nLecture + Demo\n\n\n13:30–15:00\nβ-diversity & biogeography\nHands-on\n\n\n15:30–17:00\nMediterranean case study\nWorkshop"
+  },
+  {
+    "objectID": "index_v2.html#contact-resources",
+    "href": "index_v2.html#contact-resources",
+    "title": "Spatial Data Retrieval & Biodiversity Patterns",
+    "section": "Contact & Resources",
+    "text": "Contact & Resources\n\n\nInstructor\nYour Full Name, PhD\n\n📧 your.email@upatras.gr\n🌐 yourwebsite.com\n🐙 github.com/yourusername\n\n\nRepository\ngithub.com/yourusername/seminar-patras\nLicense\n\nCode: MIT\nSlides: CC-BY 4.0"
+  }
+]

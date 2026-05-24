@@ -1,0 +1,141 @@
+---
+title: "Spatial Data Retrieval & Biodiversity Patterns"
+subtitle: "A Two-Day Methodological Seminar"
+author:
+  - name: "Your Full Name, PhD"
+    affiliation: "Department of Biology, University of Patras"
+    email: "your.email@upatras.gr"
+    orcid: "0000-0000-0000-0000"
+date: today
+date-format: "MMMM D, YYYY"
+institute: "University of Patras · Department of Biology"
+format:
+  revealjs:
+    theme: [default, custom.scss]
+---
+
+## Welcome {background-color="#003366"}
+
+Καλώς ήρθατε στο διήμερο σεμινάριο για **Spatial Data & Biodiversity**
+
+::: fragment
+*Department of Biology · University of Patras · 2026*
+:::
+
+## Seminar Overview
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### Day 1 — Spatial Data
+
+- GIS fundamentals & coordinate systems
+- Open biodiversity data sources (GBIF, iNaturalist)
+- Programmatic data retrieval (R, Python)
+- Cleaning & quality control
+- Hands-on lab session
+:::
+
+::: {.column width="50%"}
+### Day 2 — Biodiversity Patterns
+
+- Alpha, beta, gamma diversity
+- Species distribution modeling (SDM)
+- Biogeographical regionalization
+- Macroecological patterns
+- Case study: Mediterranean flora
+:::
+
+::::
+
+## Learning Objectives
+
+By the end of this seminar, participants will be able to:
+
+1. **Retrieve** occurrence and environmental data from open repositories
+2. **Process** spatial datasets using reproducible workflows
+3. **Quantify** biodiversity using appropriate metrics
+4. **Model** species distributions across geographic gradients
+5. **Interpret** biogeographical patterns in an ecological context
+
+::: callout-tip
+All code, datasets, and slides will be available in the GitHub repository.
+:::
+
+## Prerequisites & Setup
+
+:::: {.columns}
+
+::: {.column width="60%"}
+**Software stack**
+
+- R (≥ 4.3) + RStudio
+- Python (≥ 3.10)
+- QGIS (≥ 3.34)
+- Git
+
+**Key R packages**
+
+```r
+install.packages(c(
+  "sf", "terra", "rgbif",
+  "CoordinateCleaner", "dismo",
+  "vegan", "biomod2", "tidyverse"
+))
+```
+:::
+
+::: {.column width="40%"}
+::: callout-note
+**Sessions**
+
+- Day 1: 09:00 – 17:00
+- Day 2: 09:00 – 17:00
+- Coffee breaks at 11:00 & 15:30
+:::
+:::
+
+::::
+
+## Agenda — Day 1 {background-color="#F8F9FA"}
+
+| Time         | Module                            | Format         |
+|--------------|-----------------------------------|----------------|
+| 09:00–10:30  | Introduction to spatial data      | Lecture        |
+| 11:00–12:30  | Coordinate systems & projections  | Lecture + Demo |
+| 13:30–15:00  | API-based data retrieval (GBIF)   | Hands-on       |
+| 15:30–17:00  | Data cleaning & QC                | Hands-on       |
+
+## Agenda — Day 2 {background-color="#F8F9FA"}
+
+| Time         | Module                          | Format         |
+|--------------|---------------------------------|----------------|
+| 09:00–10:30  | Biodiversity metrics            | Lecture        |
+| 11:00–12:30  | Species distribution modeling   | Lecture + Demo |
+| 13:30–15:00  | Biogeographical analysis        | Hands-on       |
+| 15:30–17:00  | Case study & discussion         | Workshop       |
+
+## Contact & Resources
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Instructor**
+
+Your Full Name, PhD  
+📧 your.email@upatras.gr  
+🌐 yourwebsite.com  
+🐙 github.com/yourusername
+:::
+
+::: {.column width="50%"}
+**Repository**
+
+All materials:  
+github.com/yourusername/seminar-patras
+
+**License**  
+CC-BY 4.0
+:::
+
+::::

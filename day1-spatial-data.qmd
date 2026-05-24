@@ -1,0 +1,273 @@
+---
+title: "Day 1 — Spatial Data Retrieval & Analysis"
+subtitle: "From APIs to clean, analysis-ready datasets in R"
+author: "Your Name"
+format: revealjs
+bibliography: references.bib
+---
+
+## Setup
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+library(sf)
+library(terra)
+library(rgbif)
+library(CoordinateCleaner)
+library(rnaturalearth)
+library(tidyverse)
+library(ggspatial)
+
+theme_set(theme_minimal(base_size = 13))
+```
+
+## Spatial Data: A Primer {background-color="#003366" .white-text}
+
+## What is Spatial Data?
+
+> Data that explicitly represents **location** on Earth's surface,
+> using coordinates within a defined **reference system**.
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### Vector (`sf`)
+
+- Points → occurrences
+- Lines → rivers, roads
+- Polygons → protected areas
+:::
+
+::: {.column width="50%"}
+### Raster (`terra`)
+
+- Continuous gridded surfaces
+- Elevation, temperature, NDVI
+- Each cell = one value
+:::
+
+::::
+
+::: aside
+Comprehensive treatment in @lovelace2019geocomputation and @pebesma2023spatial.
+:::
+
+## Coordinate Reference Systems
+
+The mathematical framework that links coordinates to locations on Earth.
+
+$$
+\text{CRS} = \{\,\text{datum},\ \text{projection},\ \text{units}\,\}
+$$
+
+```{r}
+#| eval: false
+
+# Always declare CRS explicitly with EPSG codes
+st_crs(4326)   # WGS 84 — geographic, degrees
+st_crs(3857)   # Web Mercator — projected, metres
+st_crs(2100)   # GGRS87 / Greek Grid — projected, metres
+```
+
+::: {.callout-important}
+## Always check the CRS
+
+Mismatched CRS is the **#1 source of errors** in spatial analysis.
+:::
+
+## The `sf` Workflow
+
+```{r}
+#| eval: false
+
+# Read country boundary
+greece <- ne_countries(country = "Greece",
+                       scale = "medium",
+                       returnclass = "sf")
+
+# Inspect
+greece |> st_geometry() |> plot()
+
+# Reproject
+greece_2100 <- st_transform(greece, 2100)
+
+# Compute area
+greece_2100 |> st_area() |> units::set_units("km^2")
+```
+
+## The `terra` Workflow
+
+```{r}
+#| eval: false
+
+library(terra)
+library(geodata)
+
+# Download WorldClim bioclimatic variables (10 arc-min)
+bioclim <- worldclim_global(var = "bio", res = 10, path = "data/raw")
+
+# Crop to Greece extent
+greece_ext <- ext(19, 30, 34, 42)
+bio_gr <- crop(bioclim, greece_ext)
+
+# Plot annual mean temperature (BIO1)
+plot(bio_gr[[1]], main = "Annual Mean Temperature (°C)")
+```
+
+## Retrieving GBIF Occurrences {background-color="#003366" .white-text}
+
+## `rgbif`: Programmatic Access to GBIF
+
+```{r}
+#| eval: false
+
+library(rgbif)
+
+# 1. Resolve a taxon key
+key <- name_backbone(name = "Quercus ilex")$usageKey
+
+# 2. Search occurrences in Greece with valid coordinates
+occ <- occ_search(
+  taxonKey           = key,
+  country            = "GR",
+  hasCoordinate      = TRUE,
+  hasGeospatialIssue = FALSE,
+  limit              = 5000
+)
+
+# 3. Extract and convert to sf
+pts <- occ$data |>
+  select(species, decimalLongitude, decimalLatitude,
+         year, basisOfRecord, datasetKey) |>
+  drop_na(decimalLongitude, decimalLatitude) |>
+  st_as_sf(coords = c("decimalLongitude", "decimalLatitude"),
+           crs = 4326)
+```
+
+## Visualising Raw Occurrences
+
+```{r}
+#| eval: false
+
+ggplot() +
+  annotation_map_tile(type = "cartolight", zoom = 6) +
+  geom_sf(data = greece, fill = NA, color = "grey30") +
+  geom_sf(data = pts, color = "#4A7C59", alpha = 0.5, size = 1) +
+  labs(title    = expression(italic("Quercus ilex") ~ "occurrences in Greece"),
+       subtitle = "Source: GBIF.org",
+       caption  = "CRS: EPSG:4326") +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+## Data Cleaning Pipeline
+
+```{mermaid}
+flowchart LR
+  A[Raw GBIF<br/>records] --> B[Remove<br/>duplicates]
+  B --> C[Flag<br/>centroids & 0,0]
+  C --> D[Spatial<br/>thinning]
+  D --> E[Validate<br/>taxonomy]
+  E --> F[(Analysis-ready<br/>dataset)]
+
+  style A fill:#B22234,color:white
+  style F fill:#4A7C59,color:white
+```
+
+## Cleaning with `CoordinateCleaner`
+
+```{r}
+#| eval: false
+
+library(CoordinateCleaner)
+
+flags <- clean_coordinates(
+  x       = as.data.frame(occ$data),
+  lon     = "decimalLongitude",
+  lat     = "decimalLatitude",
+  species = "species",
+  tests   = c("capitals", "centroids", "equal",
+              "gbif", "institutions", "zeros", "seas")
+)
+
+# Keep only records that pass all tests
+clean <- occ$data[flags$.summary, ]
+```
+
+::: {.callout-tip}
+`clean_coordinates()` returns a logical matrix flagging each test
+individually — inspect failures **before** discarding!
+:::
+
+## Spatial Thinning to Reduce Sampling Bias
+
+```{r}
+#| eval: false
+
+# Thin to one record per ~5 km grid cell
+thin_grid <- function(pts, cell_km = 5) {
+  pts |>
+    st_transform(2100) |>
+    mutate(cell = paste(
+      floor(st_coordinates(geometry)[, 1] / (cell_km * 1000)),
+      floor(st_coordinates(geometry)[, 2] / (cell_km * 1000)))) |>
+    group_by(cell) |>
+    slice(1) |>
+    ungroup() |>
+    st_transform(4326)
+}
+
+pts_thin <- thin_grid(pts, cell_km = 5)
+```
+
+## Quality Control: Before vs After
+
+```{r}
+#| eval: false
+
+library(patchwork)
+
+p1 <- ggplot(greece) +
+  geom_sf(fill = "grey95") +
+  geom_sf(data = pts, color = "#B22234", alpha = 0.4, size = 0.8) +
+  labs(title = paste("Raw —", nrow(pts), "records")) +
+  theme_void()
+
+p2 <- ggplot(greece) +
+  geom_sf(fill = "grey95") +
+  geom_sf(data = pts_thin, color = "#4A7C59", alpha = 0.6, size = 0.8) +
+  labs(title = paste("Thinned —", nrow(pts_thin), "records")) +
+  theme_void()
+
+p1 + p2
+```
+
+## Hands-on Exercise 1 {background-color="#003366" .white-text}
+
+### 🛠️ Your turn (45 min)
+
+1. Pick a Mediterranean species (plant or animal)
+2. Retrieve GBIF occurrences with `rgbif::occ_search()`
+3. Apply `CoordinateCleaner::clean_coordinates()`
+4. Map raw vs cleaned distribution side-by-side
+5. Briefly discuss flagged records with your neighbour
+
+⏱️ We reconvene at **14:15**
+
+## Take-aways from Day 1
+
+- The R spatial stack (`sf` + `terra`) covers the full data pipeline
+- Always verify and harmonise **CRS** before any spatial operation
+- GBIF data are powerful but **noisy** — clean systematically
+- Document every step → **reproducibility is non-negotiable**
+
+::: {.callout-note}
+Tomorrow we move from *where* species occur to *how diverse* assemblages are.
+:::
+
+## References
+
+::: {#refs}
+:::

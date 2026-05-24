@@ -1,0 +1,94 @@
+/*-- scss:defaults --*/
+
+$primary-color: #003366;
+$secondary-color: #B22234;
+$accent-color: #4A7C59;
+$bg-light: #F8F9FA;
+$text-dark: #1A1A1A;
+$text-muted: #5A5A5A;
+
+$font-family-sans-serif: "Source Sans Pro", "Helvetica Neue", sans-serif;
+$font-family-serif: "Crimson Pro", "Georgia", serif;
+$font-family-monospace: "JetBrains Mono", "Fira Code", monospace;
+
+$presentation-heading-font: $font-family-sans-serif;
+$presentation-heading-color: $primary-color;
+$presentation-heading-font-weight: 600;
+$presentation-font-size-root: 30px;
+
+$body-bg: #FFFFFF;
+$body-color: $text-dark;
+$link-color: $primary-color;
+
+$code-block-bg: #F5F7FA;
+$code-color: $secondary-color;
+
+/*-- scss:rules --*/
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+.reveal {
+  font-family: $font-family-sans-serif;
+
+  h1, h2, h3, h4 {
+    color: $primary-color;
+    letter-spacing: -0.02em;
+  }
+  h1 { font-size: 2.2em; font-weight: 700; }
+  h2 { font-size: 1.5em; font-weight: 600;
+       border-bottom: 2px solid $accent-color; padding-bottom: 0.2em; }
+  h3 { font-size: 1.15em; color: $accent-color; }
+
+  blockquote {
+    border-left: 4px solid $accent-color;
+    background: $bg-light;
+    padding: 0.8em 1.2em;
+    font-family: $font-family-serif;
+    font-style: italic;
+    color: $text-muted;
+  }
+
+  pre code {
+    font-family: $font-family-monospace;
+    font-size: 0.65em;
+    line-height: 1.4;
+    border-radius: 6px;
+    border-left: 4px solid $primary-color;
+  }
+
+  .title-slide {
+    h1.title { color: white; font-size: 1.7em; font-weight: 700; }
+    .subtitle, .quarto-title-author-name, .date { color: rgba(255,255,255,0.9); }
+  }
+
+  .columns { display: flex; gap: 2em; align-items: flex-start; }
+
+  .highlight {
+    background: linear-gradient(120deg, transparent 0%, lighten($accent-color, 45%) 50%, transparent 100%);
+    padding: 0 0.2em;
+    font-weight: 600;
+  }
+
+  table {
+    font-size: 0.8em;
+    th { background: $primary-color; color: white; padding: 0.4em 0.8em; }
+    td { padding: 0.35em 0.8em; border-bottom: 1px solid #E0E0E0; }
+    tr:nth-child(even) { background: $bg-light; }
+  }
+}
+
+.reveal section.section-title {
+  background: linear-gradient(135deg, $primary-color 0%, $accent-color 100%);
+  h1, h2 { color: white; border: none; }
+}
+
+.white-text,
+.white-text h1,
+.white-text h2,
+.white-text h3,
+.white-text p,
+.white-text li,
+.white-text strong,
+.white-text em {
+  color: white !important;
+}
