@@ -1,0 +1,35 @@
+{
+  "title": "Spatial Data Retrieval and Biodiversity Patterns: A Two-Day Seminar in R",
+  "description": "Slides, code, and reproducible pipeline for a methodological seminar delivered at the Department of Biology, University of Patras (2026).",
+  "creators": [
+    {
+      "name": "Lastname, Firstname",
+      "affiliation": "Department of Biology, University of Patras",
+      "orcid": "0000-0000-0000-0000"
+    }
+  ],
+  "keywords": [
+    "spatial ecology",
+    "biodiversity",
+    "R",
+    "GBIF",
+    "species distribution modelling",
+    "reproducible research",
+    "Mediterranean",
+    "Quarto"
+  ],
+  "license": "MIT",
+  "upload_type": "lesson",
+  "access_right": "open",
+  "language": "eng",
+  "communities": [
+    { "identifier": "ecology" }
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/kkougiou/Biodiversity_Biogeography_Upatras",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
