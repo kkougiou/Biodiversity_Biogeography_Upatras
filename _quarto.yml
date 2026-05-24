@@ -8,7 +8,7 @@ website:
   navbar:
     background: primary
     left:
-      - href: index.qmd
+      - href: index_v2.qmd
         text: Home
       - href: day1-spatial-data.qmd
         text: "Day 1: Spatial Data"
@@ -21,6 +21,15 @@ website:
         href: mailto:kkougiou@aua.gr
 
 format:
+  html:
+    theme: cosmo
+    code-fold: true
+    code-tools: true
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    fig-width: 8
+    fig-height: 5
   revealjs:
     theme: [default, custom.scss]
     slide-number: c/t

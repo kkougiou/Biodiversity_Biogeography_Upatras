@@ -2,71 +2,50 @@
 title: "Spatial Data Retrieval & Biodiversity Patterns"
 subtitle: "A Two-Day Methodological Seminar in R"
 author:
-  - name: "Konstantinos Kougioumoutzis, PhD, MSc"
+  - name: "Konstantinos Kougioumoutzis, PhD"
     affiliation: "Department of Biology, University of Patras"
     email: "kkougiou@aua.gr"
     orcid: "0000-0002-6938-3025"
 date: today
 date-format: "MMMM D, YYYY"
-format: revealjs
+format: html
 ---
 
-## Welcome {.white-text background-color="#003366"}
+**Καλώς ήρθατε στο διήμερο σεμινάριο για Spatial Data & Biodiversity in R.**
 
-Καλώς ήρθατε στο διήμερο σεμινάριο για **Spatial Data & Biodiversity in R**
-
-::: fragment
-*Department of Biology · University of Patras · 2026*
-:::
+Please use the navigation bar above to access the interactive presentation slides for Day 1 and Day 2.
 
 ## Why R for Spatial Ecology?
 
-:::::: columns
-::: {.column width="50%"}
--   **Reproducible** scripted workflows
--   Mature spatial stack (`sf`, `terra`, `stars`)
--   Direct access to **GBIF**, climate, elevation APIs
--   Powerful biodiversity packages (`vegan`, `iNEXT`, `betapart`)
--   Integrated reporting via **Quarto**
-:::
-
-:::: {.column width="50%"}
-```{r}
-#| eval: false
-library(sf)
-library(terra)
-library(rgbif)
-library(vegan)
-library(tidyverse)
-```
+* **Reproducible** scripted workflows
+* Mature spatial stack (`sf`, `terra`, `stars`)
+* Direct access to **GBIF**, climate, elevation APIs
+* Powerful biodiversity packages (`vegan`, `iNEXT`, `betapart`)
+* Integrated reporting via **Quarto**
 
 ::: callout-tip
 One language, end-to-end pipeline.
 :::
-::::
-::::::
 
 ## Seminar Overview
 
 ::::: columns
 ::: {.column width="50%"}
 ### Day 1 — Spatial Data
-
--   GIS fundamentals & CRS
--   Open biodiversity data sources
--   Programmatic retrieval with `rgbif`
--   Cleaning with `CoordinateCleaner`
--   Hands-on lab session
+* GIS fundamentals & CRS
+* Open biodiversity data sources
+* Programmatic retrieval with `rgbif`
+* Cleaning with `CoordinateCleaner`
+* Hands-on lab session
 :::
 
 ::: {.column width="50%"}
 ### Day 2 — Biodiversity Patterns
-
--   α, β, γ diversity (`vegan`, `betapart`)
--   Rarefaction & Hill numbers (`iNEXT`)
--   Species Distribution Modeling (`predicts`, `biomod2`)
--   Biogeographical regionalization
--   Mediterranean case study
+* α, β, γ diversity (`vegan`, `betapart`)
+* Rarefaction & Hill numbers (`iNEXT`)
+* Species Distribution Modeling (`predicts`, `biomod2`)
+* Biogeographical regionalization
+* Mediterranean case study
 :::
 :::::
 
@@ -141,7 +120,7 @@ R ≥ 4.3 · RStudio · Quarto ≥ 1.4 · Git · \~2 GB free disk space for spat
 ::: {.column width="50%"}
 ### Repository
 
-github.com/kkougiou/seminar-patras
+github.com/kkougiou/Biodiversity_Biogeography_Upatras
 
 **License**
 
