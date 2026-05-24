@@ -1,6 +1,6 @@
 project:
   type: website
-  output-dir: _output
+  output-dir: _site
 
 website:
   title: "Spatial Data & Biodiversity Patterns"
