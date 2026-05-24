@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this seminar material, please cite it as below."
+title: "Spatial Data Retrieval and Biodiversity Patterns"
+authors:
+  - family-names: "Lastname"
+    given-names: "Firstname"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+    affiliation: "Department of Biology, University of Patras"
+version: "1.0.0"
+date-released: "2026-XX-XX"
+license: MIT
+repository-code: "https://github.com/yourusername/seminar-patras"
+doi: "10.5281/zenodo.XXXXXXX"
+type: dataset
+keywords:
+  - spatial ecology
+  - biodiversity
+  - R
+  - reproducible research
